@@ -44,4 +44,15 @@ public class ProductController {
         productRepository.delete(product);
         return true;
     }
+
+    @PatchMapping("/update")
+    Product updateProduct(@RequestBody Product product, @RequestParam Integer id) {
+        Product product1 = productRepository.findById(id).orElse(null);
+        if (product1 == null) {
+            return null;
+        }
+
+        product.setId(id);
+        return productRepository.save(product);
+    }
 }
