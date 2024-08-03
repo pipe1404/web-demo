@@ -3,11 +3,7 @@ package com.example.web.controller;
 import com.example.web.entity.Product;
 import com.example.web.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,8 +19,29 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
+    @GetMapping("/{id}")
+    Product getProductById(@PathVariable Integer id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
     @GetMapping("/list")
     List<Product> listProduct() {
         return productRepository.findAll();
+    }
+
+    @PostMapping("/create")
+    Product createProduct(@RequestBody Product product) {
+        return productRepository.save(product);
+    }
+
+    @DeleteMapping("/delete")
+    Boolean deleteProduct(@RequestParam Integer id) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return false;
+        }
+
+        productRepository.delete(product);
+        return true;
     }
 }
